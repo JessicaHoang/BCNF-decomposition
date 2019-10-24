@@ -1,4 +1,4 @@
 # BCNF-decomposition
-Stefan Do
+Stefan Do, 009946599
 
-Jessica Hoang 010685779
+Jessica Hoang, 010685779
