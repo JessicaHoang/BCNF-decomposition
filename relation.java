@@ -35,136 +35,133 @@ public class relation implements Cloneable{
 		}
 
 
-private Set<Integer> splitFD(String attr){
-	Set<Integer> r = new HashSet<>();
-	String[] attribute = attr.split(",");
-	for(String a: attribute) {
-		r.add(Integer.parseInt(a));
+	private Set<Integer> splitFD(String attr){
+		Set<Integer> r = new HashSet<>();
+		String[] attribute = attr.split(",");
+		for(String a: attribute) {
+			r.add(Integer.parseInt(a));
+		}
+		return r;
 	}
-	return r;
+
+	/*returns whether the relations are a subset of each other.*/
+	public boolean subset(relation r2) {
+		if(lhs.containsAll(r2.lhs) && rhs.containsAll(r2.rhs)) {
+			return true;
+		}
+		return false;
+	}
 	
-}
-
-public boolean isTrivial() {
-	return lhs.containsAll(rhs);
-}
-
-
-/*returns whether the relations are a subset of each other.*/
-public boolean subset(relation r2) {
-	if(lhs.containsAll(r2.lhs) && rhs.containsAll(r2.rhs)) {
-		return true;
-	}
-	return false;
-}
-
-/*returns relation of union*/
-public relation union(relation r2) {
-	if(r2 == null) {
-		return this;
-	}
-	Set<Integer> currentSet = attributes;
-	Set<Integer> otherSet = r2.attributes;
-	currentSet.addAll(otherSet);
-	relation newRelation = new relation();
-	List<Integer> list = new ArrayList<>(currentSet);
-	if(!list.isEmpty()) {
-		for(int i = 0; i<list.size(); i++) {
-			newRelation.attr[list.get(i)] = 1;
+	/*Difference*/
+	public relation difference(relation r2) {
+		if(r2 == null) {
+			return null;
 		}
-		return newRelation;
-	}
-	return null;
-}
-
-/*intersect method*/
-public relation intersect(relation r2) {
-	if(r2 == null) {
+		Set<Integer> currentSet = attributes;
+		Set<Integer> otherSet = r2.attributes;
+		currentSet.removeAll(otherSet);
+		relation newRelation = new relation();
+		List<Integer> list = new ArrayList<>(currentSet);
+		if(!list.isEmpty()) {
+			for(int i = 0; i<list.size(); i++) {
+				newRelation.attr[list.get(i)] = 1;
+			}
+			return newRelation;
+		}
 		return null;
 	}
-	Set<Integer> currentSet = attributes;
-	Set<Integer> otherSet = r2.attributes;
-	currentSet.retainAll(otherSet);
-	relation newRelation = new relation();
-	List<Integer> list = new ArrayList<>(currentSet);
-	if(!list.isEmpty()) {
-		for(int i = 0; i<list.size(); i++) {
-			newRelation.attr[list.get(i)] = 1;
+	
+	/*intersect method*/
+	public relation intersect(relation r2) {
+		if(r2 == null) {
+			return null;
 		}
-		return newRelation;
-	}
-	return null;
-}
-
-/*Difference*/
-public relation difference(relation r2) {
-	if(r2 == null) {
+		Set<Integer> currentSet = attributes;
+		Set<Integer> otherSet = r2.attributes;
+		currentSet.retainAll(otherSet);
+		relation newRelation = new relation();
+		List<Integer> list = new ArrayList<>(currentSet);
+		if(!list.isEmpty()) {
+			for(int i = 0; i<list.size(); i++) {
+				newRelation.attr[list.get(i)] = 1;
+			}
+			return newRelation;
+		}
 		return null;
 	}
-	Set<Integer> currentSet = attributes;
-	Set<Integer> otherSet = r2.attributes;
-	currentSet.removeAll(otherSet);
-	relation newRelation = new relation();
-	List<Integer> list = new ArrayList<>(currentSet);
-	if(!list.isEmpty()) {
-		for(int i = 0; i<list.size(); i++) {
-			newRelation.attr[list.get(i)] = 1;
+
+	/*returns relation of union*/
+	public relation union(relation r2) {
+		if(r2 == null) {
+			return this;
 		}
-		return newRelation;
+		Set<Integer> currentSet = attributes;
+		Set<Integer> otherSet = r2.attributes;
+		currentSet.addAll(otherSet);
+		relation newRelation = new relation();
+		List<Integer> list = new ArrayList<>(currentSet);
+		if(!list.isEmpty()) {
+			for(int i = 0; i<list.size(); i++) {
+				newRelation.attr[list.get(i)] = 1;
+			}
+			return newRelation;
+		}
+		return null;
 	}
-	return null;
-}
 
-/*Get first element of the relation list*/
-public relation getFirst() {
-	if (!relList.isEmpty() || relList != null) {
-		return (relation) relList.get(0);
+	/*Get first element of the relation list*/
+	public relation getFirst() {
+		if (!relList.isEmpty() || relList != null) {
+			return (relation) relList.get(0);
+		}
+		return null;
 	}
-	return null;
-}
 
-/*Insert into relation list*/
-public void insert(Relation r) {
-	relList.add(r);
-}
-
-/*Get next element of the list*/
-public relation getNext() {
-	it = relList.iterator();
-	if (it.hasNext()) {
-		return (relation) it.next();
+	public boolean isTrivial() {
+		return lhs.containsAll(rhs);
 	}
-	return null;
-}
-
-public void resetIterator() {
-	it = relList.iterator();
-}
-
-public boolean hasNext() {
-	return it.hasNext();
-}
-
-public Iterator<Relation> getIterator() {
-	return relList.iterator();
-}
-
-public String toString() {
-	StringBuilder output = new StringBuilder();
-	for (Relation rel : relList) {
-		output.append(rel.toString() + "\n");
+	
+	public boolean hasNext() {
+		return it.hasNext();
 	}
-	return output.toString();
-}
+	
+	/*Get next element of the list*/
+	public relation getNext() {
+		it = relList.iterator();
+		if (it.hasNext()) {
+			return (relation) it.next();
+		}
+		return null;
+	}
 
-/*remove from the relation list*/
-public void remove(Relation t) {
-	relList.remove(t);
-}
+	/*Insert into relation list*/
+	public void insert(Relation r) {
+		relList.add(r);
+	}
+	
+	/*remove from the relation list*/
+	public void remove(Relation t) {
+		relList.remove(t);
+	}
 
-public List<Relation> getList() {
-	return relList;
-}
+	public Iterator<Relation> getIterator() {
+		return relList.iterator();
+	}
+	
+	public void resetIterator() {
+		it = relList.iterator();
+	}
+	
+	public List<Relation> getList() {
+		return relList;
+	}
+	public String toString() {
+		StringBuilder output = new StringBuilder();
+		for (Relation rel : relList) {
+			output.append(rel.toString() + "\n");
+		}
+		return output.toString();
+	}
 
 //public List<Relation> getPowerSets() {
 //	List<Character> charSet = new ArrayList<Character>(getCharSet(this.a));
