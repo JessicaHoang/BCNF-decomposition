@@ -1,4 +1,4 @@
 # BCNF-decomposition
 Stefan Do
 
-Jessica Hoang
+Jessica Hoang 010685779
