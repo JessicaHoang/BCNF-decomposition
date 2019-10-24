@@ -10,7 +10,7 @@ public class BoyceCoddNormalForm {
 		try (Scanner fs = new Scanner(new File(txtFile))) {
 			while (fs.hasNext()) {
 				String l = fs.nextLine().trim();
-				fds.add(new fd(l));
+				fds.add(new fd(l)); //this takes a string. If our code takes a string, all the relations would not work.
 			}
 		return fds;	
 		}
