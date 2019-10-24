@@ -20,6 +20,7 @@ public class fd {
 		this.rhs = in_rhs;
 		
 	}
+	/*Constructor*/
 	public fd() {
 		fdList = new ArrayList<>();
 	}
@@ -31,12 +32,27 @@ public class fd {
 	public relation getLefthand() {
 		return lhs;
 	}
+
+	/*Closure*/
+	public relation closure(relation r) throws CloneNotSupportedException {
+
+		relation closure = (relation) r.clone();
+		relation prevClosure = null;
+		while (true) {
+			for (fd fd : fdList) {
+				if (closure.subset(fd.getLefthand())) {
+					closure = closure.union(fd.getRighthand());
+				}
+			}
+			if (closure.equals(prevClosure)) {
+				return closure;
+			}
+			prevClosure = closure;
+		}
+	}
 	
-//	public String toString() {
-//		return lhs.toString()+ "->"+rhs.toString();
-//	}
-	
-	public boolean BCNFviolation(relation s) {
+	/*BCNFViolation method*/
+	public boolean isBCNFviolation(relation s) {
 		relation u = lhs.union(rhs);
 		if(s.subset(lhs) && s.intersect(rhs) != null && !u.subset(s)) {
 			return true;
@@ -63,34 +79,20 @@ public class fd {
 		return null;
 	}
 	
-	/*Closure*/
-	public relation closure(relation r) throws CloneNotSupportedException {
-
-		relation closure = (relation) r.clone();
-		relation prevClosure = null;
-		while (true) {
-			for (fd fd : fdList) {
-				if (closure.subset(fd.getLefthand())) {
-					closure = closure.union(fd.getRighthand());
-				}
-			}
-			if (closure.equals(prevClosure)) {
-				return closure;
-			}
-			prevClosure = closure;
-		}
+	public List<fd> getList() {
+		return fdList;
 	}
 	
 	public boolean hasNext() {
 		return it.hasNext();
 	}
 
+	public void resetIterator() {
+		it = fdList.iterator();
+	}
+	
 	public Iterator<fd> getIterator() {
 		return fdList.iterator();
-	}
-
-	public List<fd> getList() {
-		return fdList;
 	}
 	
 	public String toString() {
@@ -101,9 +103,4 @@ public class fd {
 		return output.toString();
 	}
 
-	public void resetIterator() {
-		it = fdList.iterator();
-	}
-
 }
-
