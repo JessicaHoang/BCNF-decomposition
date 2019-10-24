@@ -10,6 +10,8 @@ import javax.management.relation.Relation;
 
 public class relation implements Cloneable{
 	
+	private List<Relation> relList;
+	private Iterator<Relation> it;
 	private String line;
 	Set<Integer> lhs,rhs, attributes;
 	
@@ -21,8 +23,9 @@ public class relation implements Cloneable{
 		String[] s = line.split(";");
 		lhs = splitFD(s[0]);
 		rhs = splitFD(s[1]);
+		relList = new ArrayList<>();
 	}
-	
+
 	/*Constructor*/
 	public relation(Set<Integer> lhs, Set<Integer> attributes, Integer rAttr) {
 		this.lhs = new HashSet<>(lhs);
@@ -112,69 +115,94 @@ public relation difference(relation r2) {
 	return null;
 }
 
-@Override
-protected Object clone() throws CloneNotSupportedException {
-
-    return super.clone();
+/*Get first element of the relation list*/
+public relation getFirst() {
+	if (!relList.isEmpty() || relList != null) {
+		return (relation) relList.get(0);
+	}
+	return null;
 }
 
-class RelList {
-	private List<Relation> relList;
+/*Insert into relation list*/
+public void insert(Relation r) {
+	relList.add(r);
+}
 
-	private Iterator<Relation> it;
+/*Get next element of the list*/
+public relation getNext() {
+	it = relList.iterator();
+	if (it.hasNext()) {
+		return (relation) it.next();
+	}
+	return null;
+}
 
-	public RelList() {
-		relList = new ArrayList<>();
-	}
+public void resetIterator() {
+	it = relList.iterator();
+}
 
-	public void insert(Relation r) {
-		relList.add(r);
-	}
-	
-	public Relation getFirst() {
-		if (!relList.isEmpty() || relList != null) {
-			return relList.get(0);
-		}
-		return null;
-	}
+public boolean hasNext() {
+	return it.hasNext();
+}
 
-	public Relation getNext() {
-		it = relList.iterator();
-		if (it.hasNext()) {
-			return it.next();
-		}
-		return null;
-	}
+public Iterator<Relation> getIterator() {
+	return relList.iterator();
+}
 
-	public void resetIterator() {
-		it = relList.iterator();
+public String toString() {
+	StringBuilder output = new StringBuilder();
+	for (Relation rel : relList) {
+		output.append(rel.toString() + "\n");
 	}
+	return output.toString();
+}
 
-	public boolean hasNext() {
-		return it.hasNext();
-	}
+/*remove from the relation list*/
+public void remove(Relation t) {
+	relList.remove(t);
+}
 
-	public Iterator<Relation> getIterator() {
-		return relList.iterator();
-	}
-	
-	public String toString() {
-		StringBuilder output = new StringBuilder();
-		for (Relation rel : relList) {
-			output.append(rel.toString() + "\n");
-		}
-		return output.toString();
-	}
+public List<Relation> getList() {
+	return relList;
+}
 
-	public void remove(Relation t) {
-		relList.remove(t);
-	}
+//public List<Relation> getPowerSets() {
+//	List<Character> charSet = new ArrayList<Character>(getCharSet(this.a));
+//	List<Relation> powerSet = new ArrayList<>();
+//	int n = charSet.size();
+//
+//	for (int i = 0; i < (1 << n); i++) {
+//		List<Character> sets = new ArrayList<>();
+//
+//		for (int j = 0; j < n; j++) {
+//			if ((i & (1 << j)) > 0) {
+//				sets.add(charSet.get(j));
+//			}
+//		}
+//		String str = getStringRepresentation(sets);
+//		if (str != null) {
+//			powerSet.add(new relation(str));
+//		}
+//	}
+//	return powerSet;
+//}
+//
+//private String getStringRepresentation(List<Character> sets) {
+//
+//	if (sets.isEmpty()) {
+//		return null;
+//	}
+//	String builder = new String();
+//	for (Character ch : sets) {
+//		builder += (ch + " ");
+//	}
+//	return builder.toString().trim();
+//}
 
-	public List<Relation> getList() {
-		return relList;
-	}
-	
-} // end of RelList class
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
 
+		return super.clone();
+	}
 
 } // end of relation class
